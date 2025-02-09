@@ -1,31 +1,32 @@
 # ContentManager.vue
 <template>
-  <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-    <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-900">Gestor de Contenidos</h1>
-      <p class="mt-2 text-lg text-gray-600">Administra el contenido de la web</p>
-    </div>
+    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+      <!-- Header con fondo sutil -->
+      <div class="mb-8 bg-accent-lighter p-6 rounded-lg">
+        <h1 class="text-3xl font-bold text-accent-dark">Gestor de Contenidos</h1>
+        <p class="mt-2 text-lg text-accent">Administra el contenido de la web</p>
+      </div>
 
     <!-- Tabs de navegación -->
     <div class="mb-8">
-  <div class="border-b border-gray-200">
-    <nav class="flex -mb-px" aria-label="Tabs">
-      <button
-        v-for="tab in tabs"
-        :key="tab.id"
-        @click="handleTabChange(tab.id)"
-        :class="[
-          activeTab === tab.id
-            ? 'border-primary text-primary'
-            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
-          'w-1/3 py-4 px-1 text-center border-b-2 font-medium text-sm'
-        ]"
-      >
-        {{ tab.name }}
-      </button>
-    </nav>
-  </div>
-</div>
+      <div class="border-b border-gray-200">
+        <nav class="flex -mb-px" aria-label="Tabs">
+          <button
+            v-for="tab in tabs"
+            :key="tab.id"
+            @click="handleTabChange(tab.id)"
+            :class="[
+              activeTab === tab.id
+                ? 'border-accent bg-accent-lighter text-accent-dark'
+                : 'border-transparent text-gray-500 hover:text-accent hover:bg-accent-lighter/50',
+              'w-1/3 py-4 px-1 text-center border-b-2 font-medium text-sm transition-all duration-200'
+            ]"
+          >
+            {{ tab.name }}
+          </button>
+        </nav>
+      </div>
+    </div>
 
     <!-- Contenido de los tabs -->
     <div class="mt-8">
@@ -82,11 +83,11 @@
       <!-- Gestor de Documentos -->
       <div v-if="activeTab === 'documents'" class="space-y-6">
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold">Documentos</h2>
+        <h2 class="text-xl font-semibold text-accent-dark">Documentos</h2>
         <button
           @click="addDocument"
-          class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark flex items-center gap-2"
-        >
+          class="px-4 py-2 bg-accent text-white rounded-md hover:bg-accent-dark transition-colors duration-200 flex items-center gap-2"
+          >
           <PlusIcon class="w-5 h-5" />
           Añadir Documento
         </button>
@@ -101,21 +102,21 @@
         item-key="id"
       >
         <template #item="{element, index}">
-          <div class="bg-white p-6 rounded-lg shadow-md">
-            <!-- Encabezado colapsado -->
+            <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-accent hover:border-accent-dark transition-colors duration-200">
+                <!-- Encabezado colapsado -->
             <div class="flex items-center gap-4 mb-4 cursor-pointer" @click="toggleExpand(index)">
               <div 
-                class="drag-handle cursor-move text-gray-400 hover:text-gray-600"
+                class="drag-handle cursor-move text-accent hover:text-accent-dark"
                 title="Arrastrar para reordenar"
               >
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
                 </svg>
               </div>
-              <div class="flex-grow font-medium text-gray-700">
+              <div class="flex-grow font-medium text-accent-dark">
                 {{ element.title || `Documento ${index + 1}` }}
               </div>
-              <div class="text-sm text-gray-500">
+              <div class="text-sm text-accent">
                 {{ element.type }}
               </div>
               <button
@@ -134,21 +135,21 @@
             </div>
 
             <!-- Contenido expandido -->
-            <div v-if="expandedIndex === index" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
+            <div v-if="expandedIndex === index" class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+                <div>
                 <label class="block text-sm font-medium text-gray-700">Título</label>
                 <input
                   v-model="element.title"
                   type="text"
-                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
-                />
+                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring focus:ring-accent focus:ring-opacity-50 hover:border-accent transition-colors duration-200"
+                  />
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700">Tipo</label>
-                <select
+                <label class="block text-sm font-medium text-accent-dark mb-1 group-hover:text-accent transition-colors duration-200">Tipo</label>
+                 <select
                   v-model="element.type"
-                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
-                >
+                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring focus:ring-accent focus:ring-opacity-50 hover:border-accent transition-colors duration-200"
+                  >
                   <option value="Correspondencia">Correspondencia</option>
                   <option value="Informes">Informes</option>
                   <option value="Nota de Prensa">Nota de Prensa</option>
@@ -156,16 +157,16 @@
                 </select>
               </div>
               <div>
-  <label class="block text-sm font-medium text-gray-700">Fecha</label>
-  <input
+                <label class="block text-sm font-medium text-accent-dark mb-1 group-hover:text-accent transition-colors duration-200">Fecha</label>
+                <input
     v-model="element.date"
     type="date"
-    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
-  />
+    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring focus:ring-accent focus:ring-opacity-50 hover:border-accent transition-colors duration-200"
+                  />
 </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700">Estado</label>
-                <select
+                <label class="block text-sm font-medium text-accent-dark mb-1 group-hover:text-accent transition-colors duration-200">Tipo</label>
+                 <select
                   v-model="element.status"
                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
                 >
@@ -176,26 +177,26 @@
                 </select>
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700">Referencia</label>
+                <label class="block text-sm font-medium text-accent-dark mb-1 group-hover:text-accent transition-colors duration-200">Fecha</label>
                 <input
                   v-model="element.reference"
                   type="text"
-                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
-                />
+                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring focus:ring-accent focus:ring-opacity-50 hover:border-accent transition-colors duration-200"
+                  />
               </div>
               <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700">Descripción</label>
-                <textarea
+                <label class="block text-sm font-medium text-accent-dark mb-1 group-hover:text-accent transition-colors duration-200">Descripción</label>
+                  <textarea
                   v-model="element.description"
                   rows="3"
-                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
-                ></textarea>
+                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring focus:ring-accent focus:ring-opacity-50 hover:border-accent transition-colors duration-200"
+                  ></textarea>
               </div>
 
               <!-- File uploads -->
               <div class="space-y-2">
-                <label class="block text-sm font-medium text-gray-700">PDF del documento</label>
-                <div class="flex items-center space-x-2">
+                <label class="block text-sm font-medium text-accent-dark mb-1">PDF del documento</label>
+                  <div class="flex items-center space-x-2">
                   <input
                     @change="handleDocumentUpload($event, index)"
                     type="file"
@@ -205,8 +206,8 @@
                   />
                   <label 
                     :for="'pdf-' + element.id"
-                    class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded cursor-pointer"
-                  >
+                    class="px-4 py-2 bg-accent-lighter hover:bg-accent-light text-accent-dark rounded cursor-pointer transition-colors duration-200"
+                    >
                     Seleccionar PDF
                   </label>
                   <span v-if="element.pdfUrl" class="text-sm text-green-600">
@@ -218,8 +219,8 @@
               <div class="md:col-span-2 flex justify-end mt-4">
                 <button
                   @click.stop="removeDocument(index)"
-                  class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
-                  title="Eliminar documento"
+                  class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors duration-200"
+                    title="Eliminar documento"
                 >
                   <Trash2 class="w-4 h-4 mr-2" />
                   Eliminar
@@ -393,18 +394,18 @@
 
     <!-- Botón de guardar -->
     <div class="mt-8 flex justify-end">
-      <button
+        <button
         @click="saveChanges"
         :disabled="!hasChanges"
         :class="[
-          'px-6 py-3 rounded-md text-sm font-medium transition-colors flex items-center gap-2',
+          'px-6 py-3 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-2',
           hasChanges
-            ? 'bg-red-600 text-white hover:bg-red-700'
-            : 'bg-pink-200 text-gray-500 cursor-not-allowed'
+            ? 'bg-accent text-white hover:bg-accent-dark shadow-lg hover:shadow-xl'
+            : 'bg-gray-200 text-gray-500 cursor-not-allowed'
         ]"
       >
-        <SaveIcon v-if="hasChanges" class="w-5 h-5" /> <!-- Icono de guardar -->
-        <SaveIcon v-else class="w-5 h-5 opacity-50" /> <!-- Icono de guardar (desactivado) -->
+        <SaveIcon v-if="hasChanges" class="w-5 h-5" />
+        <SaveIcon v-else class="w-5 h-5 opacity-50" />
         Guardar Cambios
       </button>
     </div>

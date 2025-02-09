@@ -33,12 +33,14 @@
   
       <!-- Gráficos de análisis -->
       <div class="mt-12 space-y-8">
-        <!-- Totales anuales y mensuales en la misma fila -->
-        <div class="grid grid-cols-12 gap-6">
-          <div class="col-span-5">
+        <!-- Grid con responsive breakpoints -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <!-- En móvil ocupa todo el ancho, en desktop 5 columnas -->
+          <div class="lg:col-span-5">
             <YearlyTotals />
           </div>
-          <div class="col-span-7">
+          <!-- En móvil ocupa todo el ancho, en desktop 7 columnas -->
+          <div class="lg:col-span-7">
             <MonthlyTotals />
           </div>
         </div>

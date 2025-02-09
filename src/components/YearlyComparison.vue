@@ -1,6 +1,6 @@
 <template>
     <div class="bg-white p-6 rounded-lg shadow">
-      <h3 class="text-lg font-semibold mb-4">Comparativa Anual de Tráfico (IMD)</h3>
+      <h3 class="text-lg font-semibold mb-4">Comparativa de tráfico anual (IMD)</h3>
       <div v-if="loadError" class="text-red-600 mb-4">
         {{ loadError }}
       </div>
@@ -148,9 +148,6 @@
             },
             xaxis: {
               type: 'numeric',
-              title: {
-                text: 'Día del año'
-              },
               min: 0,
               max: 365,
               tickAmount: 12,

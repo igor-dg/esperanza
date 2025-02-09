@@ -1,6 +1,6 @@
 <template>
     <div class="bg-white p-6 rounded-lg shadow">
-      <h3 class="text-lg font-semibold mb-4">Totales Mensuales de Tráfico</h3>
+      <h3 class="text-lg font-semibold mb-4">Totales mensuales</h3>
       <div v-if="loadError" class="text-red-600 mb-4">
         {{ loadError }}
       </div>
