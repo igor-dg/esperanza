@@ -17,12 +17,12 @@
   import { onMounted, onBeforeUnmount, ref } from 'vue'
   import ApexCharts from 'apexcharts'
   import _ from 'lodash'
+  import { useTrafficStore } from '@/stores/trafficStore'
   
   export default {
     name: 'YearlyComparison',
     setup() {
-        const baseUrl = import.meta.env.BASE_URL
-
+      const trafficStore = useTrafficStore(); 
       let chart = null
       const loadError = ref(null)
       const loading = ref(true)
@@ -85,29 +85,23 @@
       }
 
       const processYearData = async (year) => {
-        try {
-          console.log(`Procesando datos IMD del año ${year}...`)
-          
-          const response = await fetch(`${baseUrl}${year}.json`)
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`)
-          }
-          const data = await response.json()
-          
-          const dailyData = _.chain(data.data)
-            .map(item => ({
-              date: item[0],
-              vehicles: parseInt(item[2])
-            }))
-            .value()
+        try {          
+          const data = await trafficStore.fetchYearData(year)
+                
+                const dailyData = _.chain(data.data)
+                    .map(item => ({
+                        date: item[0],
+                        vehicles: parseInt(item[2])
+                    }))
+                    .value()
 
-          return calculateIMD(dailyData)
-        } catch (error) {
-          console.error(`Error procesando datos del año ${year}:`, error)
-          loadError.value = `Error cargando datos del año ${year}: ${error.message}`
-          return []
+                return calculateIMD(dailyData)
+            } catch (error) {
+                console.error(`Error procesando datos del año ${year}:`, error)
+                loadError.value = `Error cargando datos del año ${year}: ${error.message}`
+                return []
+            }
         }
-      }
   
       const initChart = async () => {
         try {
@@ -126,8 +120,17 @@
               height: 380,
               fontFamily: 'inherit',
               toolbar: {
-                show: true
-              },
+            show: false  // Deshabilita la barra de herramientas
+        },
+        zoom: {
+            enabled: false  // Deshabilita el zoom
+        },
+        selection: {
+            enabled: false  // Deshabilita la selección
+        },
+        pan: {
+            enabled: false  // Deshabilita el panning
+        }
             },
             dataLabels: {
               enabled: false

@@ -5,9 +5,9 @@
 @layer base {
   :root {
     /* Primary Colors */
-    --color-primary: #24b32b;
-    --color-primary-dark: #1c8921;
-    --color-primary-light: #4ac551;
+    --color-primary: #173567;
+    --color-primary-dark: #131841;
+    --color-primary-light: #337fb6;
     --color-primary-lighter: #e0eaec;
 
     /* Accent Color */
@@ -76,6 +76,10 @@
     background-color: var(--color-accent-lighter);
   }
 
+  .text-primary-light {
+    color: var(--color-primary-light);
+  }
+
   .text-primary {
     color: var(--color-primary);
   }
@@ -94,6 +98,10 @@
 
   .text-accent-dark {
     color: var(--color-accent-dark);
+  }
+
+  .border-primary-light {
+    border-color: var(--color-primary-light);
   }
 
   .border-primary {

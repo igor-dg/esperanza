@@ -12,12 +12,12 @@
   import { onMounted, onBeforeUnmount, ref } from 'vue'
   import ApexCharts from 'apexcharts'
   import _ from 'lodash'
+  import { useTrafficStore } from '@/stores/trafficStore'
   
   export default {
     name: 'MonthlyTotals',
     setup() {
-        const baseUrl = import.meta.env.BASE_URL
-
+      const trafficStore = useTrafficStore();
       let chart = null
       const loadError = ref(null)
       const AVAILABLE_YEARS = [2021, 2022, 2023, 2024, 2025]
@@ -30,38 +30,35 @@
   2025: '#6366F1'  // Índigo
 }
 
-      const processYearData = async (year) => {
-        try {
-          console.log(`Procesando datos mensuales del año ${year}...`)
-          
-          const response = await fetch(`${baseUrl}${year}.json`)
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`)
-          }
-          const data = await response.json()
-          
-          // Agrupar por mes y sumar vehículos
-          const monthlyData = _.chain(data.data)
-            .map(item => ({
-              date: new Date(item[0]),
-              vehicles: parseInt(item[2])
-            }))
-            .groupBy(item => item.date.getMonth())
-            .map((monthData, month) => ({
-  x: parseInt(month) + 1,  // Asegura que enero sea 1, febrero 2, etc.
-  y: _.sumBy(monthData, 'vehicles')
-}))
-            .sortBy('x')
-            .value()
+const processYearData = async (year) => {
+            try {
+                console.log(`Procesando datos mensuales del año ${year}...`)
+                
+                // Usamos el store en lugar de fetch
+                const data = await trafficStore.fetchYearData(year)
+                
+                // Agrupar por mes y sumar vehículos
+                const monthlyData = _.chain(data.data)
+                    .map(item => ({
+                        date: new Date(item[0]),
+                        vehicles: parseInt(item[2])
+                    }))
+                    .groupBy(item => item.date.getMonth())
+                    .map((monthData, month) => ({
+                        x: parseInt(month) + 1,
+                        y: _.sumBy(monthData, 'vehicles')
+                    }))
+                    .sortBy('x')
+                    .value()
 
-          return monthlyData
-          
-        } catch (error) {
-          console.error(`Error procesando datos del año ${year}:`, error)
-          loadError.value = `Error cargando datos del año ${year}: ${error.message}`
-          return []
+                return monthlyData
+                
+            } catch (error) {
+                console.error(`Error procesando datos del año ${year}:`, error)
+                loadError.value = `Error cargando datos del año ${year}: ${error.message}`
+                return []
+            }
         }
-      }
   
       const initChart = async () => {
         try {
@@ -80,8 +77,17 @@
               height: 380,
               fontFamily: 'inherit',
               toolbar: {
-                show: false
-              },
+            show: false
+        },
+        zoom: {
+            enabled: false
+        },
+        selection: {
+            enabled: false
+        },
+        pan: {
+            enabled: false
+        }
             },
             dataLabels: {
               enabled: false
@@ -103,7 +109,7 @@
             xaxis: {
   type: 'category',
   categories: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-  tickPlacement: 'on'  // Asegura que cada punto se asocie correctamente con su mes
+  tickPlacement: 'on' 
 },
             yaxis: {
               title: {

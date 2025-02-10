@@ -7,10 +7,10 @@
         <div class="flex justify-center">
         <img src="/logo.svg" alt="Calle La Esperanza Logo" class="h-[400px] w-auto"/>
         </div>
-        <h1 class="text-4xl font-bold text-gray-900 sm:text-5xl md:text-6xl">
+        <h1 class="text-4xl font-bold text-primary-dark sm:text-5xl md:text-6xl">
         Calle La Esperanza
         </h1>
-        <p class="mt-3 max-w-md mx-auto text-base text-gray-700 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+        <p class="mt-3 max-w-md mx-auto text-base text-primary sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
         Portal informativo sobre el proceso de modificación del sentido de circulación
         </p>
       </div>
@@ -96,7 +96,7 @@
     <!-- Resource Access Section -->
     <div class="bg-primary-lighter">
       <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
-        <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+        <h2 class="text-3xl font-extrabold tracking-tight text-primary-light sm:text-4xl">
           <span class="block">Centro de recursos</span>
           <span class="block text-primary-dark">Accede a toda la documentación</span>
         </h2>

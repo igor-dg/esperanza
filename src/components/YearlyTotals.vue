@@ -13,13 +13,14 @@
   
   <script>
   import { onMounted, onBeforeUnmount, ref } from 'vue'
+  import { useTrafficStore } from '@/stores/trafficStore';
   import ApexCharts from 'apexcharts'
   import _ from 'lodash'
   
   export default {
     name: 'YearlyTotals',
     setup() {
-        const baseUrl = import.meta.env.BASE_URL
+      const trafficStore = useTrafficStore();
 
       let chart = null
       const loadError = ref(null)
@@ -33,29 +34,18 @@
   2025: '#6366F1'  // Índigo
 }
 
-      const processYearData = async (year) => {
-        try {
-          console.log(`Procesando total del año ${year}...`)
-          
-          const response = await fetch(`${baseUrl}${year}.json`)
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`)
-          }
-          const data = await response.json()
-          
-          // Sumar todos los vehículos del año
-          const yearlyTotal = _.chain(data.data)
-            .map(item => parseInt(item[2]))
-            .sum()
-            .value()
-
-          return yearlyTotal
-        } catch (error) {
-          console.error(`Error procesando datos del año ${year}:`, error)
-          loadError.value = `Error cargando datos del año ${year}: ${error.message}`
-          return 0
+const processYearData = async (year) => {
+            try {
+                const data = await trafficStore.fetchYearData(year);
+                return _.chain(data.data)
+                    .map(item => parseInt(item[2]))
+                    .sum()
+                    .value();
+            } catch (error) {
+                loadError.value = `Error cargando datos del año ${year}: ${error.message}`;
+                return 0;
+            }
         }
-      }
   
       const initChart = async () => {
         try {
@@ -76,8 +66,17 @@
               height: 345,
               fontFamily: 'inherit',
               toolbar: {
-                show: false
-              },
+            show: false
+        },
+        zoom: {
+            enabled: false
+        },
+        selection: {
+            enabled: false
+        },
+        pan: {
+            enabled: false
+        }
             },
             plotOptions: {
               bar: {

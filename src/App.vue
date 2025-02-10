@@ -11,8 +11,8 @@
                 v-for="link in navigationLinks"
                 :key="link.to"
                 :to="link.to"
-                class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 transition-colors duration-200"
-                :class="[route.path === link.to ? 'border-primary text-primary-dark' : 'border-transparent hover:border-primary-light hover:text-primary']"
+                class="inline-flex items-center px-1 pt-1 text-sm font-medium text-primary border-b-2 border-primary.light transition-colors duration-200"
+                :class="[route.path === link.to ? 'border-primary-light text-primary-light' : 'border-transparent hover:border-primary-light hover:text-primary']"
               >
                 {{ link.text }}
               </router-link> 
@@ -77,7 +77,7 @@
             </a>
           </div>
           <p class="mt-8 text-base text-gray-300 md:mt-0 md:order-1">
-            © 2025 Calle La Esperanza. Todos los derechos reservados.
+            ©idg 2025 Todos los derechos reservados.
           </p>
         </div>
       </div>
@@ -98,7 +98,7 @@ const toggleMenu = () => {
 
 const navigationLinks = [
   { to: '/', text: 'Inicio' },
-  { to: '/data', text: 'Datos y Análisis' },
+  { to: '/trafico', text: 'Datos y Análisis' },
   { to: '/documents', text: 'Documentación' },
   { to: '/legal', text: 'Marco Legal' },
   { to: '/contact', text: 'Contacto' },
