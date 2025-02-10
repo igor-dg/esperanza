@@ -2,13 +2,8 @@
     <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <h1 class="text-3xl font-bold text-gray-900 mb-8">Análisis de Tráfico - Calle Francia</h1>
       
-      <!-- Tarjetas de tráfico actual -->
-      <div v-if="loading" class="text-center py-12">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500 mx-auto"></div>
-        <p class="mt-4 text-gray-600">Cargando datos de tráfico...</p>
-      </div>
-  
-      <div v-else-if="error" class="bg-red-50 p-4 rounded-md">
+      <!-- Tarjetas de tráfico actual -->  
+      <div v-if="error" class="bg-red-50 p-4 rounded-md">
         <p class="text-red-700">{{ error }}</p>
       </div>
   
@@ -32,40 +27,23 @@
       </p>
   
       <!-- Gráficos de análisis -->
-      <div class="mt-12 space-y-8">
-        <!-- Grid con responsive breakpoints -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <!-- En móvil ocupa todo el ancho, en desktop 5 columnas -->
-          <div class="lg:col-span-5">
-            <YearlyTotals />
-          </div>
-          <!-- En móvil ocupa todo el ancho, en desktop 7 columnas -->
-          <div class="lg:col-span-7">
-            <MonthlyTotals />
-          </div>
-        </div>
-        
-        <!-- Comparativa IMD diario -->
-        <YearlyComparison />
-      </div>
+      <div class="container mx-auto px-4 py-8">
+    <TrafficDashboard />
+  </div>
     </div>
   </template>
   
   <script>
   import { ref, onMounted, onBeforeUnmount } from 'vue'
+  import TrafficDashboard from '../components/TrafficDashboard.vue'
   import TrafficCard from '../components/TrafficCard.vue'
-  import YearlyComparison from '../components/YearlyComparison.vue'
-  import MonthlyTotals from '../components/MonthlyTotals.vue'
-  import YearlyTotals from '../components/YearlyTotals.vue'
   import { obtenerDatosTrafico } from '../services/trafficService'
   
   export default {
     name: 'DataAnalysisView',
     components: {
       TrafficCard,
-      YearlyComparison,
-      MonthlyTotals,
-      YearlyTotals
+      TrafficDashboard
     },
     setup() {
       const todayTraffic = ref(0)
