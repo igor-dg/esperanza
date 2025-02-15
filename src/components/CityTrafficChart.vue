@@ -22,6 +22,9 @@
     <p class="text-sm text-gray-500 mt-4">
       * Datos disponibles desde el 25 de agosto de 2021
     </p>
+    <p class="text-sm text-gray-500 mt-4">
+      ** El medidor de la calle Los Herrán está fuera de servicio actualmente
+    </p>
   </div>
 </template>
 
@@ -69,7 +72,7 @@ export default {
       try {
         await nextTick()
         
-        const years = ['2021', '2022', '2023', '2024']
+        const years = ['2021', '2022', '2023', '2024', '2025']
         const processedData = {}
 
         Object.entries(streetsData).forEach(([streetName, streetInfo]) => {

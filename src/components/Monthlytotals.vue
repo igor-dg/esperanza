@@ -46,7 +46,7 @@ export default {
         return _.chain(yearData.data)
           .map(item => ({
             date: new Date(item[0]),
-            vehicles: parseInt(item[2])
+            vehicles: parseInt(item[1])
           }))
           .groupBy(item => item.date.getMonth())
           .map((monthData, month) => ({

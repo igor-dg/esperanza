@@ -70,7 +70,7 @@ export default {
       return _.chain(data)
         .map(item => ({
           date: item[0],
-          vehicles: parseInt(item[2])
+          vehicles: parseInt(item[1])
         }))
         // Agrupamos por semanas usando el día del año
         .groupBy(item => {

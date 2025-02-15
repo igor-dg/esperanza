@@ -41,12 +41,12 @@ export default {
     }
 
     const processYearData = (yearData) => {
-      if (!yearData || !yearData.data) return 0
-      return _.chain(yearData.data)
-        .map(item => parseInt(item[2]))
-        .sum()
-        .value()
-    }
+  if (!yearData || !yearData.data) return 0
+  return _.chain(yearData.data)
+    .map(item => parseInt(item[1]))  // Cambiado de item[2] a item[1]
+    .sum()
+    .value()
+}
 
     const initChart = () => {
       try {
