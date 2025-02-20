@@ -1,14 +1,14 @@
 <template>
     <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Documentación del Proceso</h1>
-        <p class="mt-2 text-lg text-gray-600">Documentos generados y recibidos durante el proceso de modificación</p>
+        <h1 class="text-3xl font-bold text-primary-dark">Documentación del Proceso</h1>
+        <p class="mt-2 text-lg text-primary">Documentos generados y recibidos durante el proceso de modificación</p>
       </div>
   
       <!-- Estado de carga -->
       <div v-if="loading" class="text-center py-12">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-        <p class="mt-4 text-gray-600">Cargando documentos...</p>
+        <p class="mt-4 text-primary">Cargando documentos...</p>
       </div>
   
       <!-- Estado de error -->
@@ -75,8 +75,8 @@
   
             <!-- Contenido -->
             <div class="p-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ doc.title }}</h3>
-              <p class="text-sm text-gray-600 mb-4">{{ doc.description }}</p>
+              <h3 class="text-lg font-semibold text-primary-dark mb-2">{{ doc.title }}</h3>
+              <p class="text-sm text-primary mb-4">{{ doc.description }}</p>
   
               <!-- Estado y metadatos -->
               <div class="mb-4 p-3 bg-gray-50 rounded-md">
@@ -87,9 +87,9 @@
                   >
                     {{ doc.status }}
                   </span>
-                  <span class="text-sm text-gray-500">{{ doc.date }}</span>
+                  <span class="text-sm text-primary">{{ doc.date }}</span>
                 </div>
-                <div class="text-sm text-gray-600">
+                <div class="text-sm text-primary">
                   <span class="font-medium">Ref:</span> {{ doc.reference }}
                 </div>
               </div>
@@ -121,7 +121,7 @@
   
         <!-- No hay resultados -->
         <div v-else class="text-center py-12">
-          <p class="text-gray-500">No se encontraron documentos que coincidan con los criterios de búsqueda.</p>
+          <p class="text-primary">No se encontraron documentos que coincidan con los criterios de búsqueda.</p>
         </div>
       </div>
   
@@ -134,10 +134,10 @@
         <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
           <!-- Header del modal -->
           <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-            <h3 class="text-lg font-semibold text-gray-900">{{ selectedDocument?.title }}</h3>
+            <h3 class="text-lg font-semibold text-primary-dark">{{ selectedDocument?.title }}</h3>
             <button
               @click="closePreview"
-              class="text-gray-400 hover:text-gray-500"
+              class="text-gray-400 hover:text-primary"
             >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -149,33 +149,32 @@
           <div class="p-6 overflow-y-auto max-h-[calc(90vh-8rem)]">
             <div v-if="selectedDocument" class="bg-white rounded-lg">
               <VuePdfEmbed
-                :source="selectedDocument.pdfUrl"
-                :page="currentPage"
-                @password-requested="handlePasswordRequest"
-                @rendered="handleRendered"
-                class="w-full h-full"
-                style="min-height: 600px;"
-              />
-              
+  :source="selectedDocument.pdfUrl"
+  :page="currentPage"
+  @password-requested="handlePasswordRequest"
+  @loaded="handleLoaded"
+  class="w-full h-full"
+  style="min-height: 600px;"
+/>
               <!-- Controles de navegación -->
-              <div v-if="totalPages > 1" class="flex items-center justify-center gap-4 mt-4 pb-4">
-                <button
-                  @click="currentPage > 1 && currentPage--"
-                  :disabled="currentPage <= 1"
-                  class="px-3 py-1 border rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Anterior
-                </button>
-                <span class="text-sm">
-                  Página {{ currentPage }} de {{ totalPages }}
-                </span>
-                <button
-                  @click="currentPage < totalPages && currentPage++"
-                  :disabled="currentPage >= totalPages"
-                  class="px-3 py-1 border rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Siguiente
-                </button>
+              <div class="flex items-center justify-center gap-4 mt-4 pb-4">
+  <button
+    @click="currentPage > 1 && currentPage--"
+    :disabled="currentPage <= 1"
+    class="px-3 py-1 border rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+  >
+    Anterior
+  </button>
+  <span class="text-sm">
+    Página {{ currentPage }} de {{ totalPages }}
+  </span>
+  <button
+    @click="currentPage < totalPages && currentPage++"
+    :disabled="currentPage >= totalPages"
+    class="px-3 py-1 border rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+  >
+    Siguiente
+  </button>
               </div>
             </div>
           </div>
@@ -242,10 +241,12 @@ export default {
     isPreviewable(doc) {
   return doc && doc.pdfUrl && doc.pdfUrl.toLowerCase().endsWith('.pdf')
 },
-    showPreview(doc) {
-      this.selectedDocument = doc
-      this.showPreviewModal = true
-    },
+showPreview(doc) {
+  console.log('Selected document:', doc);
+  console.log('PDF URL:', doc.pdfUrl);
+  this.selectedDocument = doc;
+  this.showPreviewModal = true;
+},
     closePreview() {
       this.showPreviewModal = false
       this.selectedDocument = null
@@ -255,9 +256,15 @@ export default {
     handlePasswordRequest() {
       console.log('Este PDF está protegido con contraseña')
     },
-    handleRendered(numberOfPages) {
-      this.totalPages = numberOfPages
-    },
+    handleLoaded(pdf) {
+  console.log('PDF Loaded:', pdf);
+  if (pdf && pdf._pdfInfo) {
+    this.totalPages = pdf._pdfInfo.numPages;
+  } else if (pdf && typeof pdf.numPages !== 'undefined') {
+    this.totalPages = pdf.numPages;
+  }
+  console.log('Total pages from loaded:', this.totalPages);
+},
     getTypeClass(type) {
       const classes = {
         'Correspondencia': 'text-blue-700 bg-blue-50',

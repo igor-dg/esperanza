@@ -18,7 +18,7 @@
             :class="[
               activeTab === tab.id
                 ? 'border-accent bg-accent-lighter text-accent-dark'
-                : 'border-transparent text-gray-500 hover:text-accent hover:bg-accent-lighter/50',
+                : 'border-transparent text-primary hover:text-accent hover:bg-accent-lighter/50',
               'w-1/3 py-4 px-1 text-center border-b-2 font-medium text-sm transition-all duration-200'
             ]"
           >
@@ -121,7 +121,7 @@
               </div>
               <button
                 @click.stop="toggleExpand(index)"
-                class="text-gray-500 hover:text-gray-700"
+                class="text-primary hover:text-gray-700"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path 
@@ -269,12 +269,12 @@
           <div class="flex-grow font-medium text-gray-700">
             {{ element.title || `Documento Legal ${index + 1}` }}
           </div>
-          <div class="text-sm text-gray-500">
+          <div class="text-sm text-primary">
             {{ element.category }}
           </div>
           <button
             @click.stop="toggleLegalExpand(index)"
-            class="text-gray-500 hover:text-gray-700"
+            class="text-primary hover:text-gray-700"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path 
@@ -401,7 +401,7 @@
           'px-6 py-3 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-2',
           hasChanges
             ? 'bg-accent text-white hover:bg-accent-dark shadow-lg hover:shadow-xl'
-            : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+            : 'bg-gray-200 text-primary cursor-not-allowed'
         ]"
       >
         <SaveIcon v-if="hasChanges" class="w-5 h-5" />
