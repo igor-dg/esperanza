@@ -1,5 +1,9 @@
+<!-- src/views/HomeView.vue -->
 <template>
   <div class="min-h-screen bg-gray-50">
+    <!-- Modal de información de reunión -->
+    <MeetingModal />
+    
     <!-- Hero Section -->
     <div class="bg-primary-lighter">
       <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
@@ -15,6 +19,11 @@
           </p>
         </div>
       </div>
+    </div>
+
+    <!-- Sección de Reunión -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <MeetingSection />
     </div>
 
     <!-- Situación Actual -->
@@ -130,12 +139,16 @@
 
 <script>
 import NewsGrid from '../components/NewsGrid.vue'
+import MeetingModal from '../components/MeetingModal.vue'
+import MeetingSection from '../components/MeetingSection.vue'
 import { ref, onMounted } from 'vue'
 
 export default {
   name: 'HomeView',
   components: {
-    NewsGrid
+    NewsGrid,
+    MeetingModal,
+    MeetingSection
   }
 }
 </script>
