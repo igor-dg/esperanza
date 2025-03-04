@@ -89,7 +89,7 @@
                   <h3 class="font-semibold text-primary-dark">Presentación</h3>
                 </div>
                 <div class="bg-primary-lighter bg-opacity-40 rounded-lg p-4 flex items-center">
-                  <img src="/esperanzakalea/logo.svg" alt="Logo" class="h-10 w-10 mr-3" />
+                  <img src="/logo.svg" alt="Logo" class="h-10 w-10 mr-3" />
                   <span class="text-primary">Informe sobre el cambio de sentido de la Calle La Esperanza</span>
                 </div>
                 

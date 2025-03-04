@@ -8,13 +8,13 @@
       leave-from-class="opacity-100 transform scale-100"
       leave-to-class="opacity-0 transform scale-95"
     >
-      <div v-if="isOpen" class="fixed inset-0 z-50 overflow-hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      <div v-if="isOpen" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <!-- Overlay con efecto de blur -->
         <div class="fixed inset-0 bg-gray-900 bg-opacity-60 backdrop-blur-sm transition-opacity" @click="close"></div>
   
         <!-- Modal centrado con diseño moderno -->
-        <div class="flex items-center justify-center min-h-screen p-4">
-          <div class="relative bg-white dark:bg-gray-100 rounded-xl overflow-hidden shadow-2xl transform transition-all max-w-xl w-full">
+        <div class="flex items-center justify-center min-h-screen py-4 px-4">
+          <div class="relative bg-white dark:bg-gray-100 rounded-xl overflow-hidden shadow-2xl transform transition-all max-w-xl w-full my-8">
             <!-- Banner superior con gradiente -->
             <div class="absolute top-0 left-0 right-0 h-3 bg-gradient-to-r from-primary via-accent to-primary-light"></div>
             
@@ -49,7 +49,7 @@
                 </p>
                 
                 <!-- Tarjetas de información -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div class="bg-primary-lighter bg-opacity-50 p-4 rounded-lg flex flex-col items-center">
                     <CalendarDays class="h-8 w-8 text-primary mb-2" />
                     <span class="font-semibold text-primary-dark">Jueves</span>
