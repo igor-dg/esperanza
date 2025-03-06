@@ -390,6 +390,7 @@
     </template>
   </draggable>
 </div>
+
     </div>
 
     <!-- Botón de guardar -->
@@ -429,7 +430,14 @@
 </template>
 
 <script>
-import { SaveIcon, PlusIcon, Trash2 } from 'lucide-vue-next'
+import { SaveIcon, 
+  PlusIcon, 
+  Trash2, 
+  Calendar, 
+  RefreshCw,
+  AlertTriangle,
+  Info,
+  AlertCircle } from 'lucide-vue-next'
 import { api } from '@/services/api'
 import { adminApi } from '@/services/adminApi'
 import draggable from 'vuedraggable'
@@ -464,6 +472,11 @@ export default {
     SaveIcon,
     PlusIcon,
     Trash2,
+    Calendar, 
+  RefreshCw,
+  AlertTriangle,
+  Info,
+  AlertCircle,
     UnsavedChangesDialog,
     ToastNotification
   },
@@ -473,7 +486,8 @@ export default {
       tabs: [
         { id: 'news', name: 'Noticias' },
         { id: 'documents', name: 'Documentos' },
-        { id: 'legal', name: 'Marco Legal' }
+        { id: 'legal', name: 'Marco Legal' },
+        { id: 'announcements', name: 'Anuncios' }
       ],
       newsItems: [],
       documents: [],
@@ -483,7 +497,9 @@ export default {
       showUnsavedDialog: false,
       navigationIntent: null,
       expandedLegalIndex: null,
-      legalDocuments: []
+      legalDocuments: [],
+      expandedAnnouncementIndex: null,
+      announcements: [],
     }
   },
   computed: {
@@ -494,7 +510,8 @@ export default {
       return (
         JSON.stringify(this.newsItems) !== JSON.stringify(this.initialContent.news) ||
         JSON.stringify(this.documents) !== JSON.stringify(this.initialContent.documents) ||
-        JSON.stringify(this.legalDocuments) !== JSON.stringify(this.initialContent.legalDocuments)
+        JSON.stringify(this.legalDocuments) !== JSON.stringify(this.initialContent.legalDocuments) ||
+        JSON.stringify(this.announcements) !== JSON.stringify(this.initialContent.announcements)
       )
     }
   },
@@ -602,7 +619,8 @@ toggleExpand(index) {
       const payload = {
         news: this.newsItems,
         documents: this.documents,
-        legalDocuments: this.legalDocuments
+        legalDocuments: this.legalDocuments,
+        announcements: this.announcements
       }
       
       await this.contentStore.saveContent(payload)
@@ -624,21 +642,56 @@ toggleExpand(index) {
 
     // Método para cargar el contenido existente
     async loadContent() {
-    try {
-      await this.contentStore.loadContent()
-      this.newsItems = [...this.contentStore.news]
-      this.documents = [...this.contentStore.documents]
-      this.legalDocuments = [...this.contentStore.legalDocuments]
-      this.initialContent = {
-        news: [...this.contentStore.news],
-        documents: [...this.contentStore.documents],
-        legalDocuments: [...this.contentStore.legalDocuments]
-      }
-    } catch (error) {
-      console.error('Error al cargar el contenido:', error)
-      this.$refs.toast?.error('Error al cargar el contenido')
+  try {
+    await this.contentStore.loadContent();
+    this.newsItems = [...this.contentStore.news];
+    this.documents = [...this.contentStore.documents];
+    this.legalDocuments = [...this.contentStore.legalDocuments];
+    this.announcements = [...this.contentStore.announcements || []];
+    
+    this.initialContent = {
+      news: [...this.contentStore.news],
+      documents: [...this.contentStore.documents],
+      legalDocuments: [...this.contentStore.legalDocuments],
+      announcements: [...this.contentStore.announcements || []]
+    };
+  } catch (error) {
+    console.error('Error al cargar el contenido:', error);
+    this.$refs.toast?.error('Error al cargar el contenido');
+  }
+},
+  // Métodos para anuncios
+  addAnnouncement() {
+    this.announcements.push({
+      id: Date.now(),
+      title: 'Nuevo anuncio',
+      type: 'info',
+      description: '',
+      active: false
+    });
+  },
+  
+  removeAnnouncement(index) {
+    this.announcements.splice(index, 1);
+  },
+  
+  toggleAnnouncementStatus(id) {
+    const index = this.announcements.findIndex(a => a.id === id);
+    if (index !== -1) {
+      this.announcements[index].active = !this.announcements[index].active;
     }
   },
+  
+  getAnnouncementIcon(type) {
+    const icons = {
+      'meeting': Calendar,
+      'update': RefreshCw,
+      'alert': AlertTriangle,
+      'info': Info
+    };
+    return icons[type] || Info;
+  },
+
 async handleTabChange(newTab) {
       this.activeTab = newTab;
   },

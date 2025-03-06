@@ -8,6 +8,7 @@ export const useContentStore = defineStore('content', {
     news: [],
     documents: [],
     legalDocuments: [],
+    announcements: [],
     loading: false,
     error: null
   }),
@@ -21,6 +22,19 @@ export const useContentStore = defineStore('content', {
         this.news = data.news || []
         this.documents = data.documents || []
         this.legalDocuments = data.legalDocuments || []
+        this.announcements = data.announcements || []
+
+        // Inicializar con el anuncio de reunión si no existe
+        if (!this.announcements.find(a => a.type === 'meeting')) {
+          this.announcements.push({
+            id: Date.now(),
+            title: 'Reunión informativa vecinal',
+            type: 'meeting',
+            description: 'Información sobre la reunión del 6 de marzo',
+            active: false // Inicialmente desactivado
+          })
+        }
+
       } catch (error) {
         console.error('Error loading content:', error)
         this.error = 'Error al cargar el contenido'
@@ -37,10 +51,21 @@ export const useContentStore = defineStore('content', {
         this.news = payload.news
         this.documents = payload.documents
         this.legalDocuments = payload.legalDocuments
+        this.announcements = payload.announcements || []
       } catch (error) {
         console.error('Error saving content:', error)
         throw error
       }
+    }
+  },
+  getters: {
+    getActiveAnnouncements: (state) => {
+      return state.announcements.filter(a => a.active)
+    },
+    
+    getMeetingModalStatus: (state) => {
+      const meetingAnnouncement = state.announcements.find(a => a.type === 'meeting')
+      return meetingAnnouncement ? meetingAnnouncement.active : false
     }
   }
 })

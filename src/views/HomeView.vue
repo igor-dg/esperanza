@@ -142,6 +142,7 @@ import NewsGrid from '../components/NewsGrid.vue'
 import MeetingModal from '../components/MeetingModal.vue'
 import MeetingSection from '../components/MeetingSection.vue'
 import { ref, onMounted } from 'vue'
+import { useContentStore } from '@/stores/content'
 
 export default {
   name: 'HomeView',
@@ -149,6 +150,20 @@ export default {
     NewsGrid,
     MeetingModal,
     MeetingSection
+  },
+  setup() {
+    const contentStore = useContentStore()
+    
+    onMounted(async () => {
+      // Cargar el contenido para asegurar que tenemos la configuración más reciente
+      try {
+        await contentStore.loadContent()
+      } catch (error) {
+        console.error('Error al cargar contenido:', error)
+      }
+    })
+    
+    return {}
   }
 }
 </script>
