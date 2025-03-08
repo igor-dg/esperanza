@@ -17,8 +17,8 @@ export const api = {
             // Asumimos que response.data ya es un objeto JSON
             if (response.data && response.data.data) {
                 return {
-                    url: `${import.meta.env.VITE_ASSETS_URL}/${type}/${response.data.data.pdfUrl}`,
-                    thumbnailUrl: `${import.meta.env.VITE_ASSETS_URL}/thumbnails/${response.data.data.thumbnailUrl}`
+                    url: `${import.meta.env.VITE_UPLOADS_URL}/${type}/${response.data.data.pdfUrl}`,
+                    thumbnailUrl: `${import.meta.env.VITE_UPLOADS_URL}/thumbnails/${response.data.data.thumbnailUrl}`
                 }
             } else {
                 console.error('Unexpected response format:', response.data)
@@ -37,7 +37,7 @@ export const api = {
         formData.append('type', 'gallery')
         
         try {
-            const response = await axios.post('/upload.php', formData, {
+            const response = await axios.post('/uploadGalleryImage.php', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -45,9 +45,9 @@ export const api = {
             
             if (response.data && response.data.data) {
                 return {
-                    imageUrl: `${import.meta.env.VITE_ASSETS_URL}/gallery/${response.data.data.imageUrl}`,
-                    thumbnailUrl: `${import.meta.env.VITE_ASSETS_URL}/thumbnails/${response.data.data.thumbnailUrl}`
-                }
+                    imageUrl: `${import.meta.env.VITE_UPLOADS_URL}/${response.data.data.imageUrl}`,
+                    thumbnailUrl: `${import.meta.env.VITE_UPLOADS_URL}/${response.data.data.thumbnailUrl}`
+                  }
             } else {
                 throw new Error('Invalid server response format')
             }
@@ -68,7 +68,7 @@ export const api = {
         })
         
         return {
-          thumbnailUrl: `${import.meta.env.VITE_ASSETS_URL}/${response.data.data.thumbnailUrl}`
+          thumbnailUrl: `${import.meta.env.VITE_UPLOADS_URL}/${response.data.data.thumbnailUrl}`
         }
     },
 

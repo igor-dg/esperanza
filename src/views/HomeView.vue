@@ -211,6 +211,7 @@ import MeetingSection from '../components/MeetingSection.vue'
 import { ref, computed, onMounted } from 'vue'
 import { useContentStore } from '@/stores/content'
 import { useGalleryStore } from '@/stores/galleryStore'
+import { normalizeImageUrl } from '@/utils/normalizeImageUrl.js'
 
 export default {
   name: 'HomeView',
@@ -232,10 +233,10 @@ export default {
 
     // Función para normalizar URLs de imágenes
     const getImageUrl = (path) => {
-      if (!path) return '/images/placeholder-image.jpg';
-      if (path.startsWith('http')) return path;
-      return `${import.meta.env.VITE_ASSETS_URL}/${path}`;
-    };
+  return normalizeImageUrl(path, {
+    baseUrl: import.meta.env.VITE_ASSETS_URL
+  });
+};
 
     // Manejar errores de carga de imágenes
     const handleImageError = (event) => {
