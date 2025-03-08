@@ -233,7 +233,6 @@
     </div>
 
       <!-- Gestor de Marco Legal -->
-<!-- Template para la sección de Marco Legal -->
 <div v-if="activeTab === 'legal'" class="space-y-6">
   <div class="flex justify-between items-center mb-4">
     <h2 class="text-xl font-semibold">Marco Legal</h2>
@@ -390,6 +389,7 @@
     </template>
   </draggable>
 </div>
+
 <!-- Gestor de Galería -->
 <div v-if="activeTab === 'gallery'" class="space-y-6">
   <div class="flex justify-between items-center mb-4">
@@ -593,6 +593,7 @@ import { adminApi } from '@/services/adminApi'
 import draggable from 'vuedraggable'
 import UnsavedChangesDialog from '@/components/UnsavedChangesDialog.vue'
 import ToastNotification from '@/components/ToastNotification.vue'
+import GalleryManager from '@/components/GalleryManager.vue'
 import { auth } from '@/services/auth'
 import { useRouter } from 'vue-router'
 import { useContentStore } from '@/stores/content'
@@ -622,7 +623,8 @@ export default {
     SaveIcon,
     PlusIcon,
     Trash2,
-    Calendar, 
+    Calendar,
+    GalleryManager,
   RefreshCw,
   AlertTriangle,
   Info,
@@ -643,6 +645,7 @@ export default {
       newsItems: [],
       documents: [],
       legalDocuments: [],
+      gallery: [],
       expandedIndex: null,
       initialContent: null,
       showUnsavedDialog: false,
@@ -807,7 +810,7 @@ handleImageError(event) {
 
 // Añadir nuevo elemento a la galería
 addGalleryItem() {
-  this.gallery.push({
+  const newItem = {
     id: Date.now(),
     title: '',
     description: '',
@@ -815,7 +818,17 @@ addGalleryItem() {
     date: new Date().toISOString().split('T')[0],
     imageUrl: '',
     thumbnailUrl: '',
-    order: this.gallery.length + 1
+    tags: [],
+    order: this.gallery?.length + 1 || 1
+  };
+  
+  this.gallery = [...(this.gallery || []), newItem];
+  
+  this.$nextTick(() => {
+    const lastCard = document.querySelector('.gallery-item:last-child');
+    if (lastCard) {
+      lastCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   });
 },
 
@@ -838,16 +851,39 @@ async handleGalleryImageUpload(event, index) {
   if (!file) return;
   
   try {
+    this.$refs.toast.info('Subiendo imagen...');
+    
     const response = await api.uploadGalleryImage(file);
+    
+    // Actualizar la imagen en el array de la galería
     this.gallery[index].imageUrl = response.imageUrl;
     this.gallery[index].thumbnailUrl = response.thumbnailUrl;
+    
     this.$refs.toast.success('Imagen subida correctamente');
   } catch (error) {
     console.error('Error al subir la imagen:', error);
-    this.$refs.toast.error('Error al subir la imagen');
+    this.$refs.toast.error('Error al subir la imagen: ' + (error.response?.data?.message || error.message));
   }
 },
 
+/**
+ * Normaliza la estructura de un elemento de galería
+ * @param {Object} item - Elemento de galería a normalizar
+ * @returns {Object} - Elemento normalizado con todos los campos requeridos
+ */
+ normalizeGalleryItem(item) {
+  return {
+    id: item.id || Date.now(),
+    title: item.title || '',
+    description: item.description || '',
+    category: item.category || 'estado-actual',
+    date: item.date || new Date().toISOString().split('T')[0],
+    imageUrl: item.imageUrl || '',
+    thumbnailUrl: item.thumbnailUrl || '',
+    tags: Array.isArray(item.tags) ? item.tags : [], // Aseguramos que tags sea un array
+    order: item.order || 0
+  };
+},
     // Método para cargar el contenido existente
     async loadContent() {
   try {
@@ -856,14 +892,14 @@ async handleGalleryImageUpload(event, index) {
     this.documents = [...this.contentStore.documents];
     this.legalDocuments = [...this.contentStore.legalDocuments];
     this.announcements = [...this.contentStore.announcements || []];
-    this.gallery = [...this.contentStore.gallery || []];
+    this.gallery = (this.contentStore.gallery || []).map(item => this.normalizeGalleryItem(item));
     
     this.initialContent = {
       news: [...this.contentStore.news],
       documents: [...this.contentStore.documents],
       legalDocuments: [...this.contentStore.legalDocuments],
       announcements: [...this.contentStore.announcements || []],
-      gallery: [...this.contentStore.gallery || []]
+      gallery: [...this.gallery]
     };
   } catch (error) {
     console.error('Error al cargar el contenido:', error);

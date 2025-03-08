@@ -101,6 +101,7 @@ const navigationLinks = [
   { to: '/trafico', text: 'Datos y Análisis' },
   { to: '/documents', text: 'Documentación' },
   { to: '/legal', text: 'Marco Legal' },
+  { to: '/galeria', text: 'Galería' },
   { to: '/contact', text: 'Contacto' },
   { to: '/admin/content', text: 'Gestor de contenidos' }
 ]

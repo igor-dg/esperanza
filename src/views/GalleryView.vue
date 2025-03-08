@@ -59,7 +59,7 @@
           <!-- Imagen con efecto hover -->
           <div class="aspect-square overflow-hidden">
             <img
-              :src="image.thumbnailUrl"
+              :src="normalizeImageUrl(image.thumbnailUrl)"
               :alt="image.title"
               class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
@@ -127,7 +127,7 @@
           <div class="flex flex-col items-center">
             <img
               v-if="currentImage"
-              :src="currentImage.imageUrl"
+              :src="normalizeImageUrl(currentImage.imageUrl)"
               :alt="currentImage.title"
               class="max-h-[75vh] max-w-full object-contain"
             />
@@ -171,6 +171,19 @@
       // Obtener referencias a las propiedades del store
       const loading = computed(() => galleryStore.loading)
       const error = computed(() => galleryStore.error)
+
+      // Esta función normaliza las URLs de las imágenes
+const normalizeImageUrl = (url) => {
+  if (!url) return '/images/placeholder-image.jpg';
+  
+  // Si ya es una URL completa, devolverla como está
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  
+  // Si es una ruta relativa, construir la URL completa
+  return `${import.meta.env.VITE_ASSETS_URL}/${url}`;
+};
       
       // Obtener todas las etiquetas disponibles
       const availableTags = computed(() => galleryStore.getAllTags)

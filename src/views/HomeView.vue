@@ -130,8 +130,8 @@
       </div>
     </div>
 
-     <!-- Galería Section -->
-     <div class="bg-primary-lighter">
+    <!-- Galería Section -->
+    <div class="bg-primary-lighter">
       <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
         <div class="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
           <div>
@@ -155,40 +155,43 @@
               </div>
             </div>
           </div>
+          
+          <!-- Grid de miniaturas dinámicas -->
           <div class="mt-8 grid grid-cols-2 gap-0.5 md:grid-cols-3 lg:mt-0 lg:ml-8">
-            <div class="col-span-1 flex justify-center py-8 px-8 bg-white rounded-lg shadow-md">
-              <div class="h-20 w-20 rounded-lg overflow-hidden relative bg-gray-200">
-                <img src="/img/7861195.jpg" alt="Miniatura 1" class="h-full w-full object-cover" />
-              </div>
+            <div v-if="loading" class="col-span-full py-10 flex items-center justify-center">
+              <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
             </div>
-            <div class="col-span-1 flex justify-center py-8 px-8 bg-white rounded-lg shadow-md">
-              <div class="h-20 w-20 rounded-lg overflow-hidden relative bg-gray-200">
-                <img src="/img/7861195.jpg" alt="Miniatura 2" class="h-full w-full object-cover" />
+            
+            <template v-else>
+              <!-- Mostrar hasta 5 imágenes de la galería -->
+              <div 
+                v-for="(image, index) in galleryPreview" 
+                :key="image.id"
+                class="col-span-1 flex justify-center py-8 px-8 bg-white rounded-lg shadow-md"
+              >
+                <div class="h-20 w-20 rounded-lg overflow-hidden relative bg-gray-200">
+                  <img 
+                    :src="getImageUrl(image.thumbnailUrl)" 
+                    :alt="image.title || `Imagen ${index + 1}`" 
+                    class="h-full w-full object-cover"
+                    @error="handleImageError"
+                  />
+                </div>
               </div>
-            </div>
-            <div class="col-span-1 flex justify-center py-8 px-8 bg-white rounded-lg shadow-md">
-              <div class="h-20 w-20 rounded-lg overflow-hidden relative bg-gray-200">
-                <img src="/img/7861195.jpg" alt="Miniatura 3" class="h-full w-full object-cover" />
+              
+              <!-- "Ver más" para el último espacio -->
+              <div class="col-span-1 flex justify-center py-8 px-8 bg-white rounded-lg shadow-md group relative overflow-hidden">
+                <div class="h-20 w-20 rounded-lg flex items-center justify-center bg-primary-lighter">
+                  <span class="text-primary font-bold text-2xl">+</span>
+                </div>
+                <router-link 
+                  to="/galeria" 
+                  class="absolute inset-0 bg-primary/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <span class="text-white font-medium">Ver más</span>
+                </router-link>
               </div>
-            </div>
-            <div class="col-span-1 flex justify-center py-8 px-8 bg-white rounded-lg shadow-md">
-              <div class="h-20 w-20 rounded-lg overflow-hidden relative bg-gray-200">
-                <img src="/img/7861195.jpg" alt="Miniatura 4" class="h-full w-full object-cover" />
-              </div>
-            </div>
-            <div class="col-span-1 flex justify-center py-8 px-8 bg-white rounded-lg shadow-md">
-              <div class="h-20 w-20 rounded-lg overflow-hidden relative bg-gray-200">
-                <img src="/img/7861195.jpg" alt="Miniatura 5" class="h-full w-full object-cover" />
-              </div>
-            </div>
-            <div class="col-span-1 flex justify-center py-8 px-8 bg-white rounded-lg shadow-md group relative overflow-hidden">
-              <div class="h-20 w-20 rounded-lg flex items-center justify-center bg-primary-lighter">
-                <span class="text-primary font-bold text-2xl">+</span>
-              </div>
-              <div class="absolute inset-0 bg-primary/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <span class="text-white font-medium">Ver más</span>
-              </div>
-            </div>
+            </template>
           </div>
         </div>
       </div>
@@ -205,8 +208,9 @@
 import NewsGrid from '../components/NewsGrid.vue'
 import MeetingModal from '../components/MeetingModal.vue'
 import MeetingSection from '../components/MeetingSection.vue'
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useContentStore } from '@/stores/content'
+import { useGalleryStore } from '@/stores/galleryStore'
 
 export default {
   name: 'HomeView',
@@ -217,17 +221,46 @@ export default {
   },
   setup() {
     const contentStore = useContentStore()
+    const galleryStore = useGalleryStore()
+    const loading = ref(true)
+    
+    // Obtener una vista previa de la galería (5 imágenes como máximo)
+    const galleryPreview = computed(() => {
+      // Tomar hasta 5 imágenes de la galería
+      return galleryStore.images.slice(0, 5);
+    });
+
+    // Función para normalizar URLs de imágenes
+    const getImageUrl = (path) => {
+      if (!path) return '/images/placeholder-image.jpg';
+      if (path.startsWith('http')) return path;
+      return `${import.meta.env.VITE_ASSETS_URL}/${path}`;
+    };
+
+    // Manejar errores de carga de imágenes
+    const handleImageError = (event) => {
+      event.target.src = '/images/placeholder-image.jpg';
+    };
     
     onMounted(async () => {
       // Cargar el contenido para asegurar que tenemos la configuración más reciente
+      loading.value = true
       try {
         await contentStore.loadContent()
+        await galleryStore.loadGalleryImages()
       } catch (error) {
         console.error('Error al cargar contenido:', error)
+      } finally {
+        loading.value = false
       }
     })
     
-    return {}
+    return {
+      galleryPreview,
+      loading,
+      getImageUrl,
+      handleImageError
+    }
   }
 }
 </script>

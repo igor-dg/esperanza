@@ -31,6 +31,32 @@ export const api = {
         }
     },
 
+    async uploadGalleryImage(file) {
+        const formData = new FormData()
+        formData.append('file', file)
+        formData.append('type', 'gallery')
+        
+        try {
+            const response = await axios.post('/upload.php', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            
+            if (response.data && response.data.data) {
+                return {
+                    imageUrl: `${import.meta.env.VITE_ASSETS_URL}/gallery/${response.data.data.imageUrl}`,
+                    thumbnailUrl: `${import.meta.env.VITE_ASSETS_URL}/thumbnails/${response.data.data.thumbnailUrl}`
+                }
+            } else {
+                throw new Error('Invalid server response format')
+            }
+        } catch (error) {
+            console.error('Error uploading gallery image:', error)
+            throw error
+        }
+    },
+
     async uploadLegalImage(file) {
         const formData = new FormData()
         formData.append('file', file)
