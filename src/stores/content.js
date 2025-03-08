@@ -9,6 +9,7 @@ export const useContentStore = defineStore('content', {
     documents: [],
     legalDocuments: [],
     announcements: [],
+    gallery: [],
     loading: false,
     error: null
   }),
@@ -23,6 +24,7 @@ export const useContentStore = defineStore('content', {
         this.documents = data.documents || []
         this.legalDocuments = data.legalDocuments || []
         this.announcements = data.announcements || []
+        this.gallery = data.gallery || []
 
         // Inicializar con el anuncio de reunión si no existe
         if (!this.announcements.find(a => a.type === 'meeting')) {
@@ -52,6 +54,7 @@ export const useContentStore = defineStore('content', {
         this.documents = payload.documents
         this.legalDocuments = payload.legalDocuments
         this.announcements = payload.announcements || []
+        this.gallery = payload.gallery || []
       } catch (error) {
         console.error('Error saving content:', error)
         throw error

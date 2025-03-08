@@ -23,6 +23,11 @@ const routes = [
     component: () => import('../views/LegalFrameworkView.vue')
   },
   {
+    path: '/galeria',
+    name: 'galeria',
+    component: () => import('../views/GalleryView.vue')
+  },
+  {
     path: '/contact',
     name: 'contact',
     component: () => import('../views/ContactView.vue')

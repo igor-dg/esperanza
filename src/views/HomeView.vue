@@ -130,6 +130,70 @@
       </div>
     </div>
 
+     <!-- Galería Section -->
+     <div class="bg-primary-lighter">
+      <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
+        <div class="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
+          <div>
+            <h2 class="text-3xl font-extrabold text-primary-dark sm:text-4xl">
+              Galería de imágenes
+            </h2>
+            <p class="mt-3 max-w-3xl text-lg text-primary">
+              Hemos documentado fotográficamente el impacto del cambio de sentido. Las imágenes muestran la congestión, problemas de seguridad y otros efectos negativos generados por esta modificación.
+            </p>
+            <div class="mt-8">
+              <div class="inline-flex rounded-md shadow">
+                <router-link
+                  to="/galeria"
+                  class="btn btn-primary inline-flex items-center"
+                >
+                  Ver galería
+                  <svg class="ml-2 -mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                  </svg>
+                </router-link>
+              </div>
+            </div>
+          </div>
+          <div class="mt-8 grid grid-cols-2 gap-0.5 md:grid-cols-3 lg:mt-0 lg:ml-8">
+            <div class="col-span-1 flex justify-center py-8 px-8 bg-white rounded-lg shadow-md">
+              <div class="h-20 w-20 rounded-lg overflow-hidden relative bg-gray-200">
+                <img src="/img/7861195.jpg" alt="Miniatura 1" class="h-full w-full object-cover" />
+              </div>
+            </div>
+            <div class="col-span-1 flex justify-center py-8 px-8 bg-white rounded-lg shadow-md">
+              <div class="h-20 w-20 rounded-lg overflow-hidden relative bg-gray-200">
+                <img src="/img/7861195.jpg" alt="Miniatura 2" class="h-full w-full object-cover" />
+              </div>
+            </div>
+            <div class="col-span-1 flex justify-center py-8 px-8 bg-white rounded-lg shadow-md">
+              <div class="h-20 w-20 rounded-lg overflow-hidden relative bg-gray-200">
+                <img src="/img/7861195.jpg" alt="Miniatura 3" class="h-full w-full object-cover" />
+              </div>
+            </div>
+            <div class="col-span-1 flex justify-center py-8 px-8 bg-white rounded-lg shadow-md">
+              <div class="h-20 w-20 rounded-lg overflow-hidden relative bg-gray-200">
+                <img src="/img/7861195.jpg" alt="Miniatura 4" class="h-full w-full object-cover" />
+              </div>
+            </div>
+            <div class="col-span-1 flex justify-center py-8 px-8 bg-white rounded-lg shadow-md">
+              <div class="h-20 w-20 rounded-lg overflow-hidden relative bg-gray-200">
+                <img src="/img/7861195.jpg" alt="Miniatura 5" class="h-full w-full object-cover" />
+              </div>
+            </div>
+            <div class="col-span-1 flex justify-center py-8 px-8 bg-white rounded-lg shadow-md group relative overflow-hidden">
+              <div class="h-20 w-20 rounded-lg flex items-center justify-center bg-primary-lighter">
+                <span class="text-primary font-bold text-2xl">+</span>
+              </div>
+              <div class="absolute inset-0 bg-primary/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <span class="text-white font-medium">Ver más</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Timeline Section -->
     <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <NewsGrid />

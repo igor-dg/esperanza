@@ -390,7 +390,157 @@
     </template>
   </draggable>
 </div>
+<!-- Gestor de Galería -->
+<div v-if="activeTab === 'gallery'" class="space-y-6">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-semibold">Galería de Imágenes</h2>
+    <button
+      @click="addGalleryItem"
+      class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark flex items-center gap-2"
+    >
+      <PlusIcon class="w-5 h-5" />
+      Añadir imagen
+    </button>
+  </div>
 
+  <!-- Lista de imágenes -->
+  <draggable 
+    v-model="gallery" 
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+    handle=".drag-handle"
+    :animation="150"
+    item-key="id"
+  >
+    <template #item="{element, index}">
+      <div 
+        class="bg-white p-4 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-200"
+      >
+        <!-- Miniatura y controles superiores -->
+        <div class="relative mb-4">
+          <!-- Imagen de vista previa -->
+          <div class="h-48 rounded-md overflow-hidden bg-gray-100">
+            <img 
+              v-if="element.thumbnailUrl" 
+              :src="getImageUrl(element.thumbnailUrl)" 
+              :alt="element.title || 'Imagen de galería'" 
+              class="w-full h-full object-cover"
+              @error="handleImageError"
+            />
+            <div v-else class="w-full h-full flex items-center justify-center bg-gray-200">
+              <svg class="w-12 h-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Controles -->
+          <div class="absolute top-2 right-2 flex space-x-1">
+            <div 
+              class="drag-handle cursor-move p-2 bg-white rounded-full shadow-sm hover:bg-gray-100 transition-colors"
+              title="Arrastrar para reordenar"
+            >
+              <svg class="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+              </svg>
+            </div>
+            
+            <button
+              @click="removeGalleryItem(index)"
+              class="p-2 bg-white rounded-full shadow-sm hover:bg-red-50 text-gray-600 hover:text-red-500 transition-colors"
+              title="Eliminar imagen"
+            >
+              <Trash2 class="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        <!-- Formulario de datos -->
+        <div class="space-y-3">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Título</label>
+            <input
+              v-model="element.title"
+              type="text"
+              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
+            />
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+            <textarea
+              v-model="element.description"
+              rows="2"
+              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
+            ></textarea>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
+              <select
+                v-model="element.category"
+                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
+              >
+                <option value="eventos">Eventos</option>
+                <option value="estado-actual">Estado actual</option>
+                <option value="propuestas">Propuestas</option>
+                <option value="reuniones">Reuniones</option>
+                <option value="otros">Otros</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Fecha</label>
+              <input
+                v-model="element.date"
+                type="date"
+                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
+              />
+            </div>
+          </div>
+          
+          <!-- Subida de imagen -->
+          <div v-if="!element.imageUrl">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Imagen</label>
+            <div class="flex items-center space-x-2">
+              <input
+                @change="(e) => handleGalleryImageUpload(e, index)"
+                type="file"
+                accept="image/*"
+                class="hidden"
+                :id="`gallery-image-${element.id}`"
+              />
+              <label 
+                :for="`gallery-image-${element.id}`"
+                class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded cursor-pointer transition-colors"
+              >
+                Seleccionar imagen
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+  </draggable>
+
+  <!-- Mensaje si no hay imágenes -->
+  <div v-if="!gallery.length" class="text-center py-10 bg-gray-50 rounded-lg border border-gray-200">
+    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+    </svg>
+    <h3 class="mt-2 text-sm font-medium text-gray-900">No hay imágenes en la galería</h3>
+    <p class="mt-1 text-sm text-gray-500">Empieza añadiendo una nueva imagen a la galería.</p>
+    <div class="mt-6">
+      <button
+        @click="addGalleryItem"
+        class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+      >
+        <PlusIcon class="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+        Nueva imagen
+      </button>
+    </div>
+  </div>
+</div>
     </div>
 
     <!-- Botón de guardar -->
@@ -487,6 +637,7 @@ export default {
         { id: 'news', name: 'Noticias' },
         { id: 'documents', name: 'Documentos' },
         { id: 'legal', name: 'Marco Legal' },
+        { id: 'gallery', name: 'Galería' },
         { id: 'announcements', name: 'Anuncios' }
       ],
       newsItems: [],
@@ -511,7 +662,8 @@ export default {
         JSON.stringify(this.newsItems) !== JSON.stringify(this.initialContent.news) ||
         JSON.stringify(this.documents) !== JSON.stringify(this.initialContent.documents) ||
         JSON.stringify(this.legalDocuments) !== JSON.stringify(this.initialContent.legalDocuments) ||
-        JSON.stringify(this.announcements) !== JSON.stringify(this.initialContent.announcements)
+        JSON.stringify(this.announcements) !== JSON.stringify(this.initialContent.announcements) ||
+    JSON.stringify(this.gallery) !== JSON.stringify(this.initialContent.gallery)
       )
     }
   },
@@ -620,7 +772,8 @@ toggleExpand(index) {
         news: this.newsItems,
         documents: this.documents,
         legalDocuments: this.legalDocuments,
-        announcements: this.announcements
+        announcements: this.announcements,
+        gallery: this.gallery
       }
       
       await this.contentStore.saveContent(payload)
@@ -640,6 +793,61 @@ toggleExpand(index) {
     }
 },
 
+// Obtener URL completa para imágenes
+getImageUrl(path) {
+  if (!path) return '';
+  if (path.startsWith('http')) return path;
+  return `${import.meta.env.VITE_ASSETS_URL}/${path}`;
+},
+
+// Manejar error de carga de imagen
+handleImageError(event) {
+  event.target.src = '/images/placeholder-image.jpg';
+},
+
+// Añadir nuevo elemento a la galería
+addGalleryItem() {
+  this.gallery.push({
+    id: Date.now(),
+    title: '',
+    description: '',
+    category: 'estado-actual',
+    date: new Date().toISOString().split('T')[0],
+    imageUrl: '',
+    thumbnailUrl: '',
+    order: this.gallery.length + 1
+  });
+},
+
+// Eliminar elemento de la galería
+removeGalleryItem(index) {
+  if (confirm('¿Está seguro de que desea eliminar esta imagen?')) {
+    // Si la imagen ya está en el servidor, deberíamos considerar eliminarla físicamente también
+    this.gallery.splice(index, 1);
+    
+    // Reordenar las imágenes restantes
+    this.gallery.forEach((item, i) => {
+      item.order = i + 1;
+    });
+  }
+},
+
+// Subir imagen para elemento de galería
+async handleGalleryImageUpload(event, index) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  try {
+    const response = await api.uploadGalleryImage(file);
+    this.gallery[index].imageUrl = response.imageUrl;
+    this.gallery[index].thumbnailUrl = response.thumbnailUrl;
+    this.$refs.toast.success('Imagen subida correctamente');
+  } catch (error) {
+    console.error('Error al subir la imagen:', error);
+    this.$refs.toast.error('Error al subir la imagen');
+  }
+},
+
     // Método para cargar el contenido existente
     async loadContent() {
   try {
@@ -648,12 +856,14 @@ toggleExpand(index) {
     this.documents = [...this.contentStore.documents];
     this.legalDocuments = [...this.contentStore.legalDocuments];
     this.announcements = [...this.contentStore.announcements || []];
+    this.gallery = [...this.contentStore.gallery || []];
     
     this.initialContent = {
       news: [...this.contentStore.news],
       documents: [...this.contentStore.documents],
       legalDocuments: [...this.contentStore.legalDocuments],
-      announcements: [...this.contentStore.announcements || []]
+      announcements: [...this.contentStore.announcements || []],
+      gallery: [...this.contentStore.gallery || []]
     };
   } catch (error) {
     console.error('Error al cargar el contenido:', error);
