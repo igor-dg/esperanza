@@ -20,14 +20,40 @@ export const useGalleryStore = defineStore('gallery', {
     },
     
     getAllTags: (state) => {
-      const allTags = state.images
-        .filter(img => img.tags && Array.isArray(img.tags))
-        .flatMap(img => img.tags)
-      return [...new Set(allTags)]
+        const allCategories = state.images
+            .map(img => img.category)
+            .filter(category => category)
+        return [...new Set(allCategories)]
     }
   },
-  
+  computed: {
+    getCategoryName() {
+      const categoryMap = {
+        'atasco': 'Atasco',
+        'inseguridad': 'Inseguridad',
+        'aparcamiento': 'Aparcamiento irregular',
+        'camiones': 'Carga y descarga',
+        'francia': 'Calle Francia',
+        'congestion': 'Congestión'
+      }
+      return (category) => categoryMap[category] || category
+    }
+  },
   actions: {
+    normalizeGalleryItem(item) {
+        return {
+          id: item.id || Date.now(),
+          title: item.title || '',
+          description: item.description || '',
+          category: item.category || 'problemas', // Valor por defecto
+          date: item.date || new Date().toISOString().split('T')[0],
+          imageUrl: item.imageUrl || '',
+          thumbnailUrl: item.thumbnailUrl || '',
+          tags: Array.isArray(item.tags) ? item.tags : [],
+          order: item.order || 0
+        };
+      },
+
     async loadGalleryImages() {
       this.loading = true
       this.error = null

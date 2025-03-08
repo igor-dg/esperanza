@@ -6,7 +6,7 @@
     
     <!-- Hero Section -->
     <div class="bg-primary-lighter">
-      <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto pb-2 px-4 sm:px-6 lg:px-8">
         <div class="text-center">
           <div class="flex justify-center">
             <img src="/logo.svg" alt="Calle La Esperanza Logo" class="h-96 w-auto"/>
@@ -139,7 +139,7 @@
               Galería de imágenes
             </h2>
             <p class="mt-3 max-w-3xl text-lg text-primary">
-              Hemos documentado fotográficamente el impacto del cambio de sentido. Las imágenes muestran la congestión, problemas de seguridad y otros efectos negativos generados por esta modificación.
+              Estamos documentando fotográficamente el impacto del cambio de sentido. Las imágenes muestran la congestión, problemas de seguridad y otros efectos negativos generados por esta modificación.
             </p>
             <div class="mt-8">
               <div class="inline-flex rounded-md shadow">

@@ -481,11 +481,12 @@
                 v-model="element.category"
                 class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
               >
-                <option value="eventos">Eventos</option>
-                <option value="estado-actual">Estado actual</option>
-                <option value="propuestas">Propuestas</option>
-                <option value="reuniones">Reuniones</option>
-                <option value="otros">Otros</option>
+                <option value="atasco">Atasco</option>
+                <option value="inseguridad">Inseguridad</option>
+                <option value="aparcamiento">Aparcamiento irregular</option>
+                <option value="camiones">Carga y descarga</option>
+                <option value="francia">Calle Francia</option>
+                <option value="congestion">Congestión</option>
               </select>
             </div>
             

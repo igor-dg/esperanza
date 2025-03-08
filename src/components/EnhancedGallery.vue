@@ -47,20 +47,18 @@
           >
             <option value="newest">Más recientes primero</option>
             <option value="oldest">Más antiguos primero</option>
-            <option value="titleAsc">Título (A-Z)</option>
-            <option value="titleDesc">Título (Z-A)</option>
           </select>
         </div>
       </div>
       
-      <!-- Filter Tags -->
+      <!-- Filter Categories -->
       <div class="mb-6">
         <div class="flex flex-wrap gap-2">
           <button
-            @click="activeTag = 'all'"
+            @click="activeFilter = 'all'"
             :class="[
               'px-4 py-2 rounded-full text-sm font-medium transition-colors',
-              activeTag === 'all'
+              activeFilter === 'all'
                 ? 'bg-primary text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-primary-lighter hover:text-primary'
             ]"
@@ -68,17 +66,17 @@
             Todas
           </button>
           <button
-            v-for="tag in availableTags"
-            :key="tag"
-            @click="activeTag = tag"
+            v-for="category in availableCategories"
+            :key="category"
+            @click="activeFilter = category"
             :class="[
               'px-4 py-2 rounded-full text-sm font-medium transition-colors',
-              activeTag === tag
+              activeFilter === category
                 ? 'bg-primary text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-primary-lighter hover:text-primary'
             ]"
           >
-            {{ tag }}
+            {{ formatCategoryName(category) }}
           </button>
         </div>
       </div>
@@ -105,6 +103,11 @@
             <h3 class="text-white font-medium text-sm">{{ image.title }}</h3>
             <p v-if="image.date" class="text-white/80 text-xs mt-1">{{ formatDate(image.date) }}</p>
             <div class="flex flex-wrap gap-1 mt-2">
+              <span
+                class="text-xs px-2 py-0.5 bg-primary/80 text-white rounded-full"
+              >
+                {{ formatCategoryName(image.category) }}
+              </span>
               <span
                 v-for="tag in image.tags"
                 :key="tag"
@@ -138,6 +141,11 @@
             <p v-if="image.date" class="text-sm text-gray-500">{{ formatDate(image.date) }}</p>
             <p v-if="image.description" class="text-sm text-gray-600 line-clamp-2 mt-1">{{ image.description }}</p>
             <div class="flex flex-wrap gap-1 mt-2">
+              <span
+                class="text-xs px-2 py-0.5 bg-primary/10 text-primary rounded-full"
+              >
+                {{ formatCategoryName(image.category) }}
+              </span>
               <span
                 v-for="tag in image.tags"
                 :key="tag"
@@ -241,6 +249,11 @@
               <p v-if="currentImage?.description" class="mt-2">{{ currentImage?.description }}</p>
               <div class="flex flex-wrap gap-2 mt-3">
                 <span
+                  class="text-xs px-2 py-1 bg-primary text-white rounded-full"
+                >
+                  {{ formatCategoryName(currentImage?.category) }}
+                </span>
+                <span
                   v-for="tag in currentImage?.tags"
                   :key="tag"
                   class="text-xs px-2 py-1 bg-primary text-white rounded-full"
@@ -273,7 +286,7 @@
       const galleryStore = useGalleryStore();
       
       // Local state
-      const activeTag = ref('all');
+      const activeFilter = ref('all');
       const lightboxOpen = ref(false);
       const currentImageIndex = ref(0);
       const viewMode = ref('grid'); // 'grid' or 'list'
@@ -284,15 +297,37 @@
       const loading = computed(() => galleryStore.loading);
       const error = computed(() => galleryStore.error);
       
-      // Get all available tags
-      const availableTags = computed(() => galleryStore.getAllTags);
+      // Get all available categories
+      const availableCategories = computed(() => {
+        const categories = galleryStore.images
+          .map(img => img.category)
+          .filter(Boolean);
+        return [...new Set(categories)];
+      });
+      
+      // Format category names for display
+      const formatCategoryName = (category) => {
+        if (!category) return 'Sin categoría';
+        
+        const categoryMapping = {
+          'atasco': 'Atasco',
+          'inseguridad': 'Inseguridad',
+          'aparcamiento': 'Aparcamiento irregular',
+          'camiones': 'Carga y descarga',
+          'francia': 'Calle Francia',
+          'congestion': 'Congestión',
+          'problemas': 'Problemas'
+        };
+        
+        return categoryMapping[category] || category;
+      };
       
       // Sort and filter images
       const sortedAndFilteredImages = computed(() => {
-        // First filter by tag
-        let images = activeTag.value === 'all'
+        // First filter by category
+        let images = activeFilter.value === 'all'
           ? galleryStore.images
-          : galleryStore.getImagesByTag(activeTag.value);
+          : galleryStore.images.filter(img => img.category === activeFilter.value);
         
         // Then sort the filtered images
         return [...images].sort((a, b) => {
@@ -301,10 +336,6 @@
               return new Date(b.date || 0) - new Date(a.date || 0);
             case 'oldest':
               return new Date(a.date || 0) - new Date(b.date || 0);
-            case 'titleAsc':
-              return (a.title || '').localeCompare(b.title || '');
-            case 'titleDesc':
-              return (b.title || '').localeCompare(a.title || '');
             default:
               return 0;
           }
@@ -438,7 +469,7 @@
         // State
         loading,
         error,
-        activeTag,
+        activeFilter,
         lightboxOpen,
         viewMode,
         sortOption,
@@ -446,7 +477,7 @@
         currentImageIndex,
         
         // Computed
-        availableTags,
+        availableCategories,
         sortedAndFilteredImages,
         currentImage,
         
@@ -458,7 +489,8 @@
         closeLightbox,
         prevImage,
         nextImage,
-        toggleFullscreen
+        toggleFullscreen,
+        formatCategoryName
       };
     }
   };
