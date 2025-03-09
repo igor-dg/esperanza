@@ -6,7 +6,7 @@
     
     <!-- Hero Section -->
     <div class="bg-primary-lighter">
-      <div class="max-w-7xl mx-auto pb-2 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto pt-2 pb-16 md:pt-16 px-4 sm:px-6 lg:px-8">
         <div class="text-center">
           <div class="flex justify-center">
             <img src="/logo.svg" alt="Calle La Esperanza Logo" class="h-96 w-auto"/>
